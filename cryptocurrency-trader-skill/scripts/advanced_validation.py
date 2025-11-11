@@ -206,9 +206,10 @@ class AdvancedValidator:
                 benford_observed.values[:5],
                 benford_expected[:5]
             )
-            if p_value < 0.01:  # Significant deviation from Benford's Law
+            # Use 0.001 threshold (0.1%) - more reasonable for financial data
+            if p_value < 0.001:
                 anomalies.append(f"Data may be fabricated (Benford's Law p={p_value:.4f})")
-                severity = 'CRITICAL'
+                severity = 'WARNING'  # Changed from CRITICAL to WARNING
 
         return {
             'anomalies_found': len(anomalies) > 0,
@@ -217,16 +218,20 @@ class AdvancedValidator:
         }
 
     def _validate_freshness(self, df: pd.DataFrame) -> Dict:
-        """Validate data freshness"""
+        """Validate data freshness with consistent timezone handling"""
+        from datetime import timezone
+
         latest_time = df['timestamp'].iloc[-1]
 
-        # Handle both timezone-aware and naive datetimes
+        # Convert to UTC for consistent comparison
         if latest_time.tzinfo is not None:
-            current_time = datetime.now(latest_time.tzinfo)
+            latest_time_utc = latest_time.astimezone(timezone.utc)
         else:
-            current_time = datetime.now()
+            # Assume UTC if no timezone info
+            latest_time_utc = latest_time.replace(tzinfo=timezone.utc)
 
-        age_seconds = (current_time - latest_time).total_seconds()
+        current_time_utc = datetime.now(timezone.utc)
+        age_seconds = (current_time_utc - latest_time_utc).total_seconds()
 
         # In strict mode, data must be <5 minutes old
         # In normal mode, data must be <15 minutes old

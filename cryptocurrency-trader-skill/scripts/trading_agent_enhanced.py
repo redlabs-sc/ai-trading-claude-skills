@@ -12,7 +12,27 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 import time
 import warnings
+import sys
+import logging
+from pathlib import Path
+
 warnings.filterwarnings('ignore')
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('trading_agent.log')
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Add scripts directory to path for imports
+_SCRIPT_DIR = Path(__file__).parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
 
 # Import advanced modules
 from advanced_validation import AdvancedValidator
@@ -40,10 +60,28 @@ class EnhancedTradingAgent:
         Args:
             balance: Account balance in USD
             exchange_name: Exchange to use (default: binance)
+
+        Raises:
+            ValueError: If balance is invalid
+            TypeError: If parameters have wrong type
         """
+        # Input validation
+        if not isinstance(balance, (int, float)):
+            raise TypeError(f"Balance must be numeric, got {type(balance).__name__}")
+
+        if balance <= 0:
+            raise ValueError(f"Balance must be positive, got {balance}")
+
+        if balance < 100:
+            logger.warning(f"Balance ${balance} is very small - position sizing may be limited")
+
+        if not isinstance(exchange_name, str):
+            raise TypeError(f"Exchange name must be string, got {type(exchange_name).__name__}")
+
         self.balance = balance
         self.exchange_name = exchange_name
         self.exchange = self._initialize_exchange()
+        logger.info(f"Initialized EnhancedTradingAgent with ${balance} balance on {exchange_name}")
 
         # Initialize advanced engines
         self.validator = AdvancedValidator(strict_mode=True)
@@ -215,13 +253,27 @@ class EnhancedTradingAgent:
             'execution_ready': False
         }
 
-        # Step 1: Multi-timeframe data collection
+        # Step 1: Multi-timeframe data collection with retry logic
         print(f"\n📊 Stage 1: Multi-Timeframe Data Collection & Validation")
 
         timeframe_dataframes = {}
         for tf in timeframes:
             print(f"   Fetching {tf} data...")
-            df = self.fetch_market_data(symbol, tf, limit=200)
+
+            # Retry logic with exponential backoff
+            df = None
+            for attempt in range(3):
+                try:
+                    df = self.fetch_market_data(symbol, tf, limit=200)
+                    if df is not None:
+                        break  # Success
+                except Exception as e:
+                    if attempt < 2:
+                        wait_time = 2 ** attempt  # 1s, 2s
+                        print(f"   ⚠️  Attempt {attempt + 1} failed, retrying in {wait_time}s...")
+                        time.sleep(wait_time)
+                    else:
+                        print(f"   ❌ All retries failed for {tf}: {str(e)[:100]}")
 
             if df is not None:
                 timeframe_dataframes[tf] = df
@@ -353,7 +405,7 @@ class EnhancedTradingAgent:
                 entry_price=recommendation['entry_price'],
                 stop_loss=recommendation['stop_loss'],
                 balance=self.balance,
-                risk_metrics=risk_metrics
+                risk_metrics=performance_metrics
             )
             recommendation['position_sizing'] = position_sizing
 
@@ -587,6 +639,91 @@ class EnhancedTradingAgent:
             'recommendation': 'Use standard 2% risk sizing for consistent risk management',
             'trading_fees_est': round(standard_value_usd * 0.002, 2)
         }
+
+    def scan_market(
+        self,
+        categories: Optional[List[str]] = None,
+        timeframes: List[str] = ['1h', '4h'],
+        top_n: int = 5
+    ) -> List[Dict]:
+        """
+        Scan market for best trading opportunities using enhanced analysis
+
+        Args:
+            categories: List of categories to scan (None = all categories)
+            timeframes: Timeframes to analyze (default: ['1h', '4h'])
+            top_n: Number of top opportunities to return (default: 5)
+
+        Returns:
+            List of top opportunities sorted by expected value
+        """
+        logger.info(f"Starting market scan across {len(self.categories)} categories")
+        print(f"\n{'='*80}")
+        print(f"🔬 MARKET SCANNER - Finding Top {top_n} Opportunities")
+        print(f"{'='*80}")
+
+        all_opportunities = []
+        scan_start_time = datetime.now()
+
+        for category, symbols in self.categories.items():
+            if categories and category not in categories:
+                continue
+
+            print(f"\n📊 Scanning {category}...")
+            logger.info(f"Scanning category: {category}")
+
+            for symbol in symbols:
+                try:
+                    print(f"   Analyzing {symbol}...", end=" ")
+                    analysis = self.comprehensive_analysis(symbol, timeframes=timeframes)
+
+                    if analysis['execution_ready']:
+                        rec = analysis['final_recommendation']
+                        ev_score = (
+                            rec['confidence'] / 100 *
+                            rec['risk_reward'] *
+                            rec.get('monte_carlo_profit_prob', 50) / 100
+                        )
+                        analysis['ev_score'] = round(ev_score, 3)
+                        analysis['category'] = category
+                        all_opportunities.append(analysis)
+                        print(f"✅ EV: {ev_score:.3f}")
+                        logger.info(f"{symbol} passed - EV: {ev_score:.3f}")
+                    else:
+                        print(f"❌ Failed validation")
+
+                    time.sleep(0.5)
+                except Exception as e:
+                    print(f"⚠️  Error: {str(e)[:50]}")
+                    logger.error(f"Failed {symbol}: {str(e)}")
+
+        all_opportunities.sort(key=lambda x: x['ev_score'], reverse=True)
+        top_opportunities = all_opportunities[:top_n]
+        scan_duration = (datetime.now() - scan_start_time).total_seconds()
+
+        print(f"\n{'='*80}")
+        print(f"📊 SCAN COMPLETE - {len(all_opportunities)} opportunities in {scan_duration:.1f}s")
+        print(f"{'='*80}")
+        logger.info(f"Scan complete: {len(all_opportunities)} found")
+
+        return top_opportunities
+
+    def display_scan_results(self, opportunities: List[Dict]):
+        """Display market scan results"""
+        if not opportunities:
+            print("\n⚠️  No execution-ready opportunities found.")
+            return
+
+        print(f"\n{'='*80}")
+        print(f"🏆 TOP TRADING OPPORTUNITIES (Ranked by EV)")
+        print(f"{'='*80}\n")
+
+        for i, analysis in enumerate(opportunities, 1):
+            rec = analysis['final_recommendation']
+            print(f"#{i}. {analysis['symbol']} ({analysis['category']})")
+            print(f"   ⭐ EV: {analysis['ev_score']:.3f} | Action: {rec['action']} | Conf: {rec['confidence']}%")
+            print(f"   💰 Entry: ${rec['entry_price']} | Stop: ${rec['stop_loss']} | Target: ${rec['take_profit']}")
+            print()
 
     def display_analysis(self, analysis: Dict):
         """Display comprehensive analysis results"""

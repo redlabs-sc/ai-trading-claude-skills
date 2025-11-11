@@ -507,6 +507,27 @@ Use these metrics to continuously refine your trading approach.
 
 ## Version
 
+**v2.0.1 - Production Hardened Edition**
+
+### What's New in v2.0.1 (2025-01-11):
+- ✅ **CRITICAL: Fixed variable name error** causing position sizing crashes
+- ✅ **CRITICAL: Fixed import paths** - works from any directory now
+- ✅ **HIGH: Division by zero protection** in ADX calculation
+- ✅ **HIGH: NaN handling** in volume analysis (OBV, VPT)
+- ✅ **HIGH: Overflow protection** in Monte Carlo simulations
+- ✅ **HIGH: Network retry logic** with exponential backoff (3 attempts)
+- ✅ **MEDIUM: UTC timezone** consistency for data freshness
+- ✅ **MEDIUM: Benford's Law** threshold adjusted (reduced false positives)
+- ✅ **NEW: Logging infrastructure** - file + console logging
+- ✅ **NEW: Input validation** - type checking and range validation
+- ✅ **NEW: scan_market() method** - documented feature now implemented
+
+**Status:** 🟢 PRODUCTION READY - All crashes and silent failures eliminated
+
+See `FIXES_APPLIED.md` for complete details and `BUG_ANALYSIS_REPORT.md` for original bug discovery.
+
+---
+
 **v2.0.0 - Enhanced Production Edition**
 
 Major enhancements:

@@ -51,28 +51,53 @@ class AdvancedAnalytics:
         if std_return == 0 or np.isnan(mean_return) or np.isnan(std_return):
             return {'error': 'Invalid return statistics for simulation'}
 
-        # Run simulations
+        # Run simulations with overflow protection
         simulations = np.zeros((num_simulations, days_ahead))
         simulations[:, 0] = current_price
+
+        # Cap extreme moves to prevent overflow
+        max_exponent = 5.0  # exp(5) ≈ 148x, exp(-5) ≈ 0.0067x
 
         for sim in range(num_simulations):
             for day in range(1, days_ahead):
                 # Geometric Brownian Motion
                 drift = mean_return
                 shock = std_return * np.random.randn()
-                simulations[sim, day] = simulations[sim, day-1] * np.exp(drift + shock)
 
-        # Calculate statistics
+                # Clamp exponent to prevent overflow
+                exponent = np.clip(drift + shock, -max_exponent, max_exponent)
+
+                try:
+                    new_value = simulations[sim, day-1] * np.exp(exponent)
+
+                    # Validate result is finite
+                    if np.isfinite(new_value) and new_value > 0:
+                        simulations[sim, day] = new_value
+                    else:
+                        # If invalid, use previous value (no change)
+                        simulations[sim, day] = simulations[sim, day-1]
+
+                except (OverflowError, FloatingPointError):
+                    # Fallback to previous value on overflow
+                    simulations[sim, day] = simulations[sim, day-1]
+
+        # Calculate statistics with validation
         final_prices = simulations[:, -1]
-        percentiles = [5, 25, 50, 75, 95]
-        price_percentiles = np.percentile(final_prices, percentiles)
 
-        # Calculate probabilities
-        prob_profit = (final_prices > current_price).sum() / num_simulations
-        prob_loss = (final_prices < current_price).sum() / num_simulations
+        # Filter out any invalid values
+        valid_prices = final_prices[np.isfinite(final_prices) & (final_prices > 0)]
+
+        if len(valid_prices) < num_simulations * 0.9:  # Less than 90% valid
+            return {'error': 'Monte Carlo simulation produced too many invalid results'}
+        percentiles = [5, 25, 50, 75, 95]
+        price_percentiles = np.percentile(valid_prices, percentiles)
+
+        # Calculate probabilities using valid prices
+        prob_profit = (valid_prices > current_price).sum() / len(valid_prices)
+        prob_loss = (valid_prices < current_price).sum() / len(valid_prices)
 
         # Expected value
-        expected_price = final_prices.mean()
+        expected_price = valid_prices.mean()
         expected_return = (expected_price / current_price - 1) * 100
 
         return {

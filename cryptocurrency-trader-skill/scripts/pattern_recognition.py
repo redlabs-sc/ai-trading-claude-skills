@@ -614,9 +614,14 @@ class PatternRecognition:
         plus_di = 100 * (plus_dm.rolling(14).mean() / atr)
         minus_di = 100 * (minus_dm.rolling(14).mean() / atr)
 
-        # ADX
-        dx = 100 * abs(plus_di - minus_di) / (plus_di + minus_di)
+        # ADX with division by zero protection
+        denominator = plus_di + minus_di
+        dx = 100 * abs(plus_di - minus_di) / denominator.where(denominator > 0, 1)
         adx = dx.rolling(14).mean().iloc[-1]
+
+        # Handle NaN or invalid ADX
+        if pd.isna(adx) or not np.isfinite(adx):
+            return 'INSUFFICIENT_DATA'
 
         if adx > 25:
             return 'STRONG'
@@ -638,13 +643,23 @@ class PatternRecognition:
         avg_volume_historical = volume.mean()
         volume_ratio = avg_volume_recent / avg_volume_historical if avg_volume_historical > 0 else 1
 
-        # On-Balance Volume (OBV)
-        obv = (volume * ((close.diff() > 0).astype(int) * 2 - 1)).cumsum()
-        obv_trend = 'INCREASING' if obv.iloc[-1] > obv.iloc[-10] else 'DECREASING'
+        # On-Balance Volume (OBV) with NaN handling
+        obv = (volume * ((close.diff() > 0).astype(int) * 2 - 1)).fillna(0).cumsum()
 
-        # Volume Price Trend (VPT)
-        vpt = (volume * close.pct_change()).cumsum()
-        vpt_trend = 'INCREASING' if vpt.iloc[-1] > vpt.iloc[-10] else 'DECREASING'
+        # Validate OBV values before comparison
+        if pd.notna(obv.iloc[-1]) and pd.notna(obv.iloc[-10]) and len(obv) >= 10:
+            obv_trend = 'INCREASING' if obv.iloc[-1] > obv.iloc[-10] else 'DECREASING'
+        else:
+            obv_trend = 'UNKNOWN'
+
+        # Volume Price Trend (VPT) with NaN handling
+        vpt = (volume * close.pct_change()).fillna(0).cumsum()
+
+        # Validate VPT values before comparison
+        if pd.notna(vpt.iloc[-1]) and pd.notna(vpt.iloc[-10]) and len(vpt) >= 10:
+            vpt_trend = 'INCREASING' if vpt.iloc[-1] > vpt.iloc[-10] else 'DECREASING'
+        else:
+            vpt_trend = 'UNKNOWN'
 
         return {
             'current_volume': round(volume.iloc[-1], 2),
