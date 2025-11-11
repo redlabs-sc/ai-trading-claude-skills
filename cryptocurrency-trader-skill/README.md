@@ -1,351 +1,166 @@
-# AI Trading Agent - Quick Start Guide
+# Cryptocurrency Trading Agent - Claude Skill
 
-🤖 **AI-powered cryptocurrency trading assistant that prevents mistakes and finds opportunities automatically**
+> AI trading agent for cryptocurrency markets with hallucination prevention, technical analysis, and risk management
 
-## What This Does
+## Overview
 
-This AI trading agent helps you:
-- ✅ Analyze cryptocurrency markets automatically
-- ✅ Prevent common trading mistakes  
-- ✅ Find the best trading opportunities
-- ✅ Calculate position sizes safely
-- ✅ Understand risks in simple terms
+This is a Claude AI skill that provides comprehensive cryptocurrency trading analysis with built-in safeguards against common AI mistakes and trading psychology traps.
 
-**No experience needed!** The AI explains everything step-by-step.
+**Key Features:**
+- Real-time technical analysis across multiple timeframes
+- Market scanning of 30+ cryptocurrencies
+- Anti-hallucination data validation
+- Automated position sizing and risk management
+- Circuit breaker system for safety
+- Beginner-friendly interface
 
-## 5-Minute Setup
+## Installation
 
-### Step 1: Install Python Dependencies
+### For Claude AI Users
 
-```bash
-pip install ccxt pandas numpy
-```
-
-### Step 2: Run the Agent
-
-```bash
-cd scripts
-python trading_agent.py
-```
-
-### Step 3: Follow the Prompts
-
-```
-💵 Enter your account balance: 1000
-Choose mode:
-  1. Analyze specific coin
-  2. Scan entire market
-Enter 1 or 2: 1
-💱 Enter trading pair: BTC/USDT
-```
-
-The AI will analyze the market and give you clear recommendations!
-
-## What You'll See
-
-### Example Analysis Output:
-
-```
-🔍 Analyzing BTC/USDT...
-
-💰 CURRENT PRICE: $94,250
-📈 RECOMMENDATION: ✅ LONG at $94,250
-
-🎯 ACTION: LONG (Buy)
-📊 CONFIDENCE: 75% (NOT a guarantee)
-💵 ENTRY PRICE: $94,250
-🛑 STOP LOSS: $93,100 (protect your money)
-🎁 TAKE PROFIT: $96,975 (target)
-⚖️ RISK/REWARD: 1:2.4
-
-💼 POSITION SIZING (for $1000 account):
-   • Buy Amount: 0.017 BTC
-   • Position Value: $100
-   • Risk Amount: $20 (2% of account)
-   • Trading Fees: $0.20
-```
-
-### What This Means in Plain English:
-
-- **LONG** = Buy (expect price to go up)
-- **Confidence 75%** = Fairly strong signal (but not guaranteed)
-- **Entry $94,250** = Buy at this price
-- **Stop Loss $93,100** = Sell if it drops to this price (protects you)
-- **Take Profit $96,975** = Sell at this price if reached (your target)
-- **Risk/Reward 1:2.4** = Risk $1 to potentially make $2.40
-- **Position Value $100** = Only invest $100 (10% of your $1000)
-- **Risk $20** = Maximum you could lose on this trade (2% rule)
-
-## Safety Features Built-In
-
-### The AI Will NEVER:
-- ❌ Generate fake data
-- ❌ Give overly confident predictions
-- ❌ Recommend trades without proper analysis
-- ❌ Risk more than 2% of your account
-- ❌ Ignore trading fees
-- ❌ Use outdated market data
-
-### The AI Will ALWAYS:
-- ✅ Validate all data before analysis
-- ✅ Analyze multiple timeframes
-- ✅ Calculate proper position sizes
-- ✅ Include trading fees
-- ✅ Explain risks clearly
-- ✅ Block bad trades automatically
-
-## Common Questions
-
-### Q: Do I need trading experience?
-**A:** No! The AI explains everything in simple terms.
-
-### Q: Will I make money?
-**A:** No guarantees. Markets are unpredictable. The AI helps you make better decisions, but losses are still possible.
-
-### Q: How much should I start with?
-**A:** Start small. Test with money you can afford to lose completely.
-
-### Q: Do I need API keys?
-**A:** No! The system uses public data - no registration needed.
-
-### Q: What if the AI says "DO NOT TRADE"?
-**A:** That's good! The AI is protecting you. Most of the time, the best action is to WAIT.
-
-### Q: Can I lose more than 2% per trade?
-**A:** The AI automatically limits risk to 2% maximum. But you must follow the stop loss!
-
-### Q: What's a stop loss?
-**A:** An automatic order that sells your position if the price drops to a certain level. It protects you from big losses.
-
-## Step-by-Step Tutorial
-
-### Beginner's First Trade (Practice Mode)
-
-1. **Start the Agent**
+1. Copy the entire `cryptocurrency-trader-skill` folder to your Claude skills directory
+2. Install Python dependencies:
    ```bash
-   python trading_agent.py
+   pip install -r requirements.txt
    ```
+3. The skill will appear automatically in your Claude interface
 
-2. **Enter Your Balance**
-   ```
-   Enter balance: 1000
-   ```
-   (This is just for calculations - no real connection to your exchange)
+### Required Dependencies
 
-3. **Choose Scan Mode** (Finds opportunities for you)
-   ```
-   Enter 1 or 2: 2
-   ```
+- Python 3.8+
+- ccxt >= 4.0.0
+- pandas >= 2.0.0
+- numpy >= 1.24.0
 
-4. **Review Top Opportunities**
-   ```
-   #1 OPPORTUNITY: BTC/USDT
-   ⭐ SCORE: 7.2/10
-   📊 CONFIDENCE: 80%
-   ```
+## Usage
 
-5. **Understand the Recommendation**
-   - Action (LONG = Buy, SHORT = Sell)
-   - Entry price (where to enter)
-   - Stop loss (where to exit if wrong)
-   - Take profit (where to exit if right)
+The skill is invoked when you ask Claude about cryptocurrency trading analysis. Examples:
 
-6. **Calculate Position Size**
-   - System shows exactly how much to buy
-   - Maximum risk is 2% of your account
+- "Analyze BTC/USDT for trading opportunities"
+- "Scan the crypto market for the best trades right now"
+- "What's the technical analysis for ETH/USDT?"
+- "Find me the top 5 trading opportunities in cryptocurrency"
 
-7. **Execute (Optional)**
-   - Go to your exchange
-   - Place the order manually
-   - Set your stop loss immediately!
+## Structure
 
-## Important Reminders
+```
+cryptocurrency-trader-skill/
+├── SKILL.md                    # Claude skill definition (main entry point)
+├── README.md                   # This file
+├── requirements.txt            # Python dependencies
+├── scripts/
+│   └── trading_agent.py        # Main trading agent implementation (518 lines)
+├── tests/
+│   └── test_trading_agent.py   # Comprehensive test suite
+└── resources/
+    ├── user-guide.md           # Complete user documentation
+    ├── protocol.md             # Technical analysis protocol
+    ├── psychology.md           # Trading psychology reference
+    └── optimization.md         # Performance optimization guide
+```
 
-### Before You Trade:
+## What Makes This Special
 
-1. ✅ This is NOT financial advice
-2. ✅ Start with small amounts
-3. ✅ Test on paper trading first
-4. ✅ Never risk money you need
-5. ✅ Markets can be irrational
-6. ✅ Past performance ≠ future results
-7. ✅ Always use stop losses
-8. ✅ Don't trade emotionally
+### Anti-Hallucination Framework
+- Validates all market data automatically
+- Rejects stale data (>5 minutes old)
+- No false precision (confidence rounded to whole numbers)
+- Explicit "UNKNOWN" instead of guessing
 
-### Red Flags to Ignore:
+### Safety Circuits
+8 mandatory circuit breakers that prevent dangerous trades:
+- Low confidence signals (< 40%)
+- Poor risk/reward ratios (< 1.5:1)
+- Stale or invalid data
+- Insufficient timeframe confirmation
 
-- ❌ "Get rich quick" thinking
-- ❌ Revenge trading after losses
-- ❌ Ignoring stop losses
-- ❌ Risking more than 2%
-- ❌ Trading without analysis
-- ❌ Following hype blindly
-- ❌ FOMO (Fear of Missing Out)
+### Beginner-Friendly
+- Plain language explanations
+- Guided step-by-step workflow
+- Risk warnings prominently displayed
+- Position sizing automated (2% max risk rule)
 
-## Market Scanner Mode
+## Quick Start (Standalone Usage)
 
-Want the AI to find opportunities for you?
+```python
+from scripts.trading_agent import TradingAgent
+
+# Initialize with your balance
+agent = TradingAgent(balance=10000)
+
+# Analyze a specific coin
+analysis = agent.analyze_opportunity('BTC/USDT', timeframes=['15m', '1h', '4h'])
+agent.display_opportunity(analysis)
+
+# Or scan the entire market
+top_5 = agent.scan_market()
+for i, opp in enumerate(top_5, 1):
+    agent.display_opportunity(opp, rank=i)
+```
+
+## Testing
 
 ```bash
-python trading_agent.py
+python tests/test_trading_agent.py
 ```
 
-Choose option 2: "Scan entire market"
+Expected: 2-3/3 tests passed (network test may fail in restricted environments)
 
-The AI will:
-1. Check 30+ cryptocurrencies
-2. Analyze 6 different categories
-3. Rank by expected value
-4. Show you the top 5 best opportunities
-5. Explain each in detail
+## Documentation
 
-### What Gets Scanned:
+- **SKILL.md** - Claude skill instructions (how Claude uses this skill)
+- **resources/user-guide.md** - Complete feature documentation
+- **resources/protocol.md** - Technical analysis protocol details
+- **resources/psychology.md** - 15 trading psychology biases addressed
+- **resources/optimization.md** - Performance improvement recommendations
 
-- **Major Coins**: BTC, ETH, BNB, SOL, XRP
-- **AI Tokens**: RENDER, FET, AGIX, OCEAN
-- **Layer 1**: ADA, AVAX, DOT, ATOM
-- **Layer 2**: MATIC, ARB, OP
-- **DeFi**: UNI, AAVE, LINK, MKR
-- **Meme**: DOGE, SHIB, PEPE
+## Market Coverage
 
-## Troubleshooting
+**30+ Cryptocurrencies across 6 categories:**
+- Major Coins: BTC, ETH, BNB, SOL, XRP
+- AI Tokens: RENDER, FET, AGIX, OCEAN, TAO
+- Layer 1: ADA, AVAX, DOT, ATOM
+- Layer 2: MATIC, ARB, OP
+- DeFi: UNI, AAVE, LINK, MKR
+- Meme: DOGE, SHIB, PEPE
 
-### "Failed to fetch BTC/USDT"
-**Problem:** Exchange temporarily unavailable  
-**Solution:** Try again in a few minutes. System tries multiple exchanges automatically.
+## Technical Indicators
 
-### "⛔ DO NOT TRADE - Insufficient data"
-**Problem:** Not enough data to make safe recommendation  
-**Solution:** This is protecting you! Wait for better conditions or try different coin.
+- RSI (Relative Strength Index)
+- MACD (Moving Average Convergence Divergence)
+- ATR (Average True Range)
+- Bollinger Bands
+- Multi-timeframe Consensus (15m, 1h, 4h)
 
-### "⚠️ Stale data"
-**Problem:** Market data too old (>5 minutes)  
-**Solution:** System rejects automatically. Wait for fresh data.
+## Important Disclaimers
 
-### No opportunities found
-**Problem:** No coins meet safety criteria  
-**Solution:** Totally normal! Most of the time, best action is WAIT.
+**This is NOT financial advice.** This tool:
+- Analyzes market data using technical indicators
+- Enforces risk management rules
+- Prevents common trading mistakes
 
-## Testing the System
+But markets are unpredictable and:
+- Even perfect analysis can be wrong
+- You are responsible for your trading decisions
+- Start small and never risk more than you can afford to lose
+- Always use stop losses to protect your capital
+- Past performance does not guarantee future results
 
-Want to verify everything works?
+## Version
 
-```bash
-cd tests
-python test_trading_agent.py
-```
+**v1.0.0** - Production release with comprehensive anti-hallucination framework
 
-You should see:
-```
-✅ PASS - Simulated Data Test
-✅ PASS - Anti-Hallucination Test
-🏆 Overall: 2-3/3 tests passed
-```
+## License
 
-## Learning Path
+MIT License - Use freely, no warranties provided
 
-### Week 1: Learn the Basics
-- Run the agent daily
-- Observe recommendations
-- Don't trade yet - just watch
-- Learn the terminology
+## Support
 
-### Week 2: Paper Trading
-- Write down hypothetical trades
-- Follow the AI recommendations
-- Track imaginary profit/loss
-- Learn from mistakes
-
-### Week 3: Small Real Trades
-- Start with smallest amounts
-- Maximum $10-20 per trade
-- Always use stop losses
-- Keep trade journal
-
-### Month 2+: Scale Gradually
-- Increase sizes slowly
-- Learn from each trade
-- Adjust based on experience
-- Never stop learning
-
-## Getting Help
-
-### Check These First:
-1. Read this README thoroughly
-2. Review SKILL.md for technical details
-3. Run test suite to verify system
-4. Check exchange API status
-
-### Understanding Error Messages:
-
-```
-❌ "Trade blocked" = Safety check triggered (good!)
-⚠️ "Warning" = Be extra cautious (still can trade)
-✅ "Safe to trade" = All checks passed (but still risky!)
-```
-
-## Real User Tips
-
-### From Beginners:
-
-> "Start way smaller than you think. I started with $100 and I'm glad I did." - Alex
-
-> "The AI saying 'DO NOT TRADE' saved me multiple times. Trust it." - Sarah
-
-> "Use the market scanner mode. Finding opportunities manually is hard." - Mike
-
-### From Experienced Traders:
-
-> "Even with 10 years experience, the AI catches things I miss." - Chen
-
-> "The position sizing feature alone is worth it. No more guessing." - Maria
-
-> "Multi-timeframe analysis is crucial. AI does it automatically." - James
-
-## What Makes This Different?
-
-### vs Manual Analysis:
-- ✅ Analyzes multiple timeframes instantly
-- ✅ Never gets emotional
-- ✅ Consistent calculations every time
-- ✅ Never forgets risk management
-
-### vs Other Trading Bots:
-- ✅ Explains reasoning clearly
-- ✅ Validates all data (no hallucinations)
-- ✅ Designed for beginners
-- ✅ Transparent methodology
-- ✅ No black box decisions
-
-### vs "Trust Me Bro" Signals:
-- ✅ Shows all data used
-- ✅ Explains confidence levels
-- ✅ Admits uncertainty
-- ✅ Realistic expectations
-- ✅ No hype or FOMO
-
-## Next Steps
-
-1. ✅ Install dependencies (`pip install -r requirements.txt`)
-2. ✅ Run first analysis (`python trading_agent.py`)
-3. ✅ Try market scanner mode
-4. ✅ Read SKILL.md for technical details
-5. ✅ Practice with paper trading
-6. ✅ Start small when ready
-
-## Remember
-
-- 💰 Only risk what you can afford to lose
-- 🛑 Always use stop losses
-- 📊 Markets are unpredictable
-- 🎓 Keep learning
-- 🧘 Stay calm and disciplined
-- ✅ The AI is a tool, not a crystal ball
-
-**Good luck and trade safely!** 🚀
+For issues or questions:
+1. Check the user-guide.md for detailed documentation
+2. Review test results for diagnostics
+3. Verify exchange connectivity and data freshness
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** November 11, 2025  
-**License:** MIT
+**Built for Claude AI Skills** - Designed to work seamlessly with Claude's agentic capabilities while maintaining strict safety standards.
