@@ -313,7 +313,8 @@ class AdvancedValidator:
             delta = df['close'].diff()
             gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-            rs = gain / loss
+            # Protect against division by zero
+            rs = gain / loss.replace(0, 1e-10)
             calculated_rsi = 100 - (100 / (1 + rs.iloc[-1]))
 
             if abs(calculated_rsi - indicators['rsi']) > 1.0:

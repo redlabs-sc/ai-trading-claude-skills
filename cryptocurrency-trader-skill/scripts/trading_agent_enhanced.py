@@ -155,7 +155,8 @@ class EnhancedTradingAgent:
             delta = df['close'].diff()
             gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-            rs = gain / loss
+            # Protect against division by zero: replace 0 with small epsilon
+            rs = gain / loss.replace(0, 1e-10)
             rsi = 100 - (100 / (1 + rs))
 
             exp1 = df['close'].ewm(span=12, adjust=False).mean()
@@ -182,7 +183,9 @@ class EnhancedTradingAgent:
             # Stochastic Oscillator
             low_14 = df['low'].rolling(14).min()
             high_14 = df['high'].rolling(14).max()
-            stoch_k = 100 * ((df['close'] - low_14) / (high_14 - low_14))
+            # Protect against division by zero when market is flat (high == low)
+            range_14 = (high_14 - low_14).replace(0, 1e-10)
+            stoch_k = 100 * ((df['close'] - low_14) / range_14)
             stoch_d = stoch_k.rolling(3).mean()
 
             indicators = {
