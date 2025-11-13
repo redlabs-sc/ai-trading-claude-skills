@@ -5,6 +5,27 @@ description: Production-grade AI trading agent for cryptocurrency markets with a
 
 # Enhanced Cryptocurrency Trading Agent Skill
 
+## 🤖 Claude Code Quick Reference
+
+**When user asks about cryptocurrency trading, analysis, or market opportunities:**
+
+```bash
+# Simple invocation
+cd cryptocurrency-trader-skill && python skill.py analyze BTC/USDT --balance 10000
+
+# Market scan
+cd cryptocurrency-trader-skill && python skill.py scan --top 5 --balance 10000
+
+# Interactive mode
+cd cryptocurrency-trader-skill && python skill.py interactive --balance 10000
+```
+
+**Default balance:** If user doesn't specify, use `--balance 10000`
+
+**Common trading pairs:** BTC/USDT, ETH/USDT, SOL/USDT, BNB/USDT, XRP/USDT
+
+---
+
 ## Overview
 
 This skill provides a **production-grade AI trading agent** for cryptocurrency markets designed for real-world application. Every output is validated through multiple stages to ensure accuracy, reliability, and actionability.
@@ -86,71 +107,67 @@ pip install -r requirements.txt
 
 ## How to Use This Skill
 
-### Step 1: Understand User Intent
+### 🚀 Quick Start (Recommended for Claude Code)
 
-Ask the user to clarify:
-- What is your trading account balance? (needed for position sizing)
-- Do you want comprehensive analysis for a specific cryptocurrency?
-- If specific: Which trading pair? (e.g., BTC/USDT, ETH/USDT, SOL/USDT)
+**Option 1: Analyze a specific cryptocurrency**
+```bash
+cd cryptocurrency-trader-skill
+python skill.py analyze BTC/USDT --balance 10000
+```
 
-### Step 2: Run the Enhanced Trading Agent
+**Option 2: Scan market for best opportunities**
+```bash
+cd cryptocurrency-trader-skill
+python skill.py scan --top 5 --balance 10000
+```
 
-**Option A: Enhanced Production-Grade Analysis (Recommended)**
+**Option 3: Interactive exploration**
+```bash
+cd cryptocurrency-trader-skill
+python skill.py interactive --balance 10000
+```
+
+### 📋 Step-by-Step Guide
+
+**Step 1: Ask user for their trading balance**
+- If not specified, use default: `--balance 10000`
+- Example: "What is your trading account balance?"
+
+**Step 2: Determine what analysis they need**
+- Specific pair analysis: Use `analyze` command
+- Find opportunities: Use `scan` command
+- Explore interactively: Use `interactive` command
+
+**Step 3: Run the appropriate command**
+```bash
+# For specific pair
+python skill.py analyze <SYMBOL> --balance <AMOUNT>
+
+# For market scan
+python skill.py scan --top <N> --balance <AMOUNT>
+
+# For interactive mode
+python skill.py interactive --balance <AMOUNT>
+```
+
+### 🔧 Advanced Usage
+
+**Option A: Direct Script Invocation (Legacy)**
 
 ```bash
 cd cryptocurrency-trader-skill
 python scripts/trading_agent_enhanced.py
 ```
 
-This provides:
-- Multi-stage validation (6 checkpoints)
-- Bayesian probabilistic signals
-- Monte Carlo simulations (10,000 scenarios)
-- Advanced risk metrics
-- Chart pattern recognition
-- Comprehensive validation reports
+**Option B: Programmatic Usage**
 
-**Option B: Standard Analysis (Legacy)**
+See `example_usage.py` for 5 comprehensive examples
 
-```bash
-python scripts/trading_agent.py
-```
+---
 
-### Step 3: Programmatic Usage
+## Interpreting Results
 
-```python
-from scripts.trading_agent_enhanced import EnhancedTradingAgent
-
-# Initialize with user's balance
-agent = EnhancedTradingAgent(balance=10000)
-
-# Comprehensive analysis with all advanced features
-analysis = agent.comprehensive_analysis(
-    symbol='BTC/USDT',
-    timeframes=['15m', '1h', '4h']
-)
-
-# Display full analysis report
-agent.display_analysis(analysis)
-
-# Access specific components
-print(f"Action: {analysis['final_recommendation']['action']}")
-print(f"Confidence: {analysis['final_recommendation']['confidence']}%")
-print(f"Execution Ready: {analysis['execution_ready']}")
-
-# Access advanced analytics
-if 'monte_carlo_scenarios' in analysis:
-    mc = analysis['monte_carlo_scenarios']
-    print(f"Expected Return: {mc['expected_return_pct']}%")
-    print(f"Profit Probability: {mc['probability_profit']}%")
-
-# Access pattern analysis
-patterns = analysis['pattern_analysis']['patterns_detected']
-for pattern in patterns:
-    print(f"{pattern['pattern']}: {pattern['bias']} ({pattern['confidence']}%)")
-```
-
-### Step 4: Interpret and Explain Results
+### Understanding the Output
 
 The enhanced agent provides comprehensive analysis with:
 
@@ -201,19 +218,22 @@ The enhanced agent provides comprehensive analysis with:
 - Lists any critical failures or warnings
 - Execution readiness flag (YES/NO)
 
-### Step 4: Provide Beginner-Friendly Explanations
+### Beginner-Friendly Explanations
 
-Always explain results in simple terms:
+When presenting results to users, explain in simple terms:
 
 - **LONG** = "Buy now, sell higher later for profit"
 - **SHORT** = "Sell now, buy back cheaper later for profit"
 - **WAIT** = "No clear opportunity right now, patience is key"
 - **Stop Loss** = "Automatic exit to limit your loss if wrong"
 - **Take Profit** = "Automatic exit to lock in profits"
-- **Confidence** = "How strong the signal is, NOT a guarantee"
+- **Confidence %** = "How certain we are about this signal (higher = better)"
 - **Risk/Reward** = "For every $1 you risk, how much you could make"
+- **Execution Ready** = "Safe to trade? (YES/NO after validation checks)"
 
-### Step 5: Emphasize Risk Warnings
+---
+
+## Risk Warnings
 
 ALWAYS include these critical reminders:
 
