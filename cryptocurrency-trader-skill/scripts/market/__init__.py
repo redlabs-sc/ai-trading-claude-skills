@@ -1,9 +1,10 @@
 """
 Market data components
 
-Handles exchange connections and data fetching
+Handles exchange connections, data fetching, and market scanning
 """
 
 from .data_provider import MarketDataProvider
+from .scanner import MarketScanner
 
-__all__ = ['MarketDataProvider']
+__all__ = ['MarketDataProvider', 'MarketScanner']
