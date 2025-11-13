@@ -118,7 +118,8 @@ class PatternRecognition:
                 peak2_price = prices[peak2_idx]
 
                 # Peaks should be similar (within 2%)
-                if abs(peak1_price - peak2_price) / peak1_price < 0.02:
+                # Protect against division by zero with price check
+                if peak1_price > 0 and abs(peak1_price - peak2_price) / peak1_price < 0.02:
                     # Find trough between peaks
                     between_troughs = [t for t in troughs if peak1_idx < t < peak2_idx]
 
@@ -155,7 +156,8 @@ class PatternRecognition:
                 trough2_price = prices[trough2_idx]
 
                 # Troughs should be similar (within 2%)
-                if abs(trough1_price - trough2_price) / trough1_price < 0.02:
+                # Protect against division by zero with price check
+                if trough1_price > 0 and abs(trough1_price - trough2_price) / trough1_price < 0.02:
                     # Find peak between troughs
                     between_peaks = [p for p in peaks if trough1_idx < p < trough2_idx]
 
@@ -207,8 +209,9 @@ class PatternRecognition:
 
                 # Head should be higher than shoulders
                 # Shoulders should be approximately equal (within 3%)
+                # Protect against division by zero with price check
                 if (head_price > ls_price and head_price > rs_price and
-                    abs(ls_price - rs_price) / ls_price < 0.03):
+                    ls_price > 0 and abs(ls_price - rs_price) / ls_price < 0.03):
 
                     # Calculate neckline (line connecting troughs between peaks)
                     neckline_price = min(prices[left_shoulder_idx:head_idx].min(),
@@ -247,8 +250,9 @@ class PatternRecognition:
                 head_price = prices[head_idx]
                 rs_price = prices[right_shoulder_idx]
 
+                # Protect against division by zero with price check
                 if (head_price < ls_price and head_price < rs_price and
-                    abs(ls_price - rs_price) / ls_price < 0.03):
+                    ls_price > 0 and abs(ls_price - rs_price) / ls_price < 0.03):
 
                     neckline_price = max(prices[left_shoulder_idx:head_idx].max(),
                                        prices[head_idx:right_shoulder_idx].max())
@@ -527,7 +531,8 @@ class PatternRecognition:
             # Check if this price is similar to any existing cluster
             similar = False
             for cluster_price in clustered:
-                if abs(price - cluster_price) / cluster_price < 0.02:
+                # Protect against division by zero with price check
+                if cluster_price > 0 and abs(price - cluster_price) / cluster_price < 0.02:
                     similar = True
                     break
 

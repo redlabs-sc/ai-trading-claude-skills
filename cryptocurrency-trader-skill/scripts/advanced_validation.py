@@ -197,19 +197,35 @@ class AdvancedValidator:
             severity = 'CRITICAL'
 
         # Method 4: Benford's Law check (detects fabricated data)
-        first_digits = df['volume'].astype(str).str[0].astype(int)
-        benford_expected = np.log10(1 + 1 / np.arange(1, 10))
-        benford_observed = first_digits.value_counts(normalize=True).sort_index()
+        # Extract first significant digit (1-9) from volume data
+        def extract_first_digit(value):
+            """Extract first significant digit for Benford's Law test"""
+            if pd.isna(value) or value == 0:
+                return None
+            # Convert to absolute value and string, remove decimal point
+            abs_str = str(abs(value)).replace('.', '').replace('e', '').replace('+', '').replace('-', '')
+            # Strip leading zeros
+            stripped = abs_str.lstrip('0')
+            if stripped and stripped[0].isdigit():
+                return int(stripped[0])
+            return None
 
-        if len(benford_observed) >= 5:
-            chi2, p_value = stats.chisquare(
-                benford_observed.values[:5],
-                benford_expected[:5]
-            )
-            # Use 0.001 threshold (0.1%) - more reasonable for financial data
-            if p_value < 0.001:
-                anomalies.append(f"Data may be fabricated (Benford's Law p={p_value:.4f})")
-                severity = 'WARNING'  # Changed from CRITICAL to WARNING
+        first_digits = df['volume'].apply(extract_first_digit).dropna()
+
+        if len(first_digits) >= 10:
+            # Perform Benford's Law test only if we have enough data
+            benford_expected = np.log10(1 + 1 / np.arange(1, 10))
+            benford_observed = first_digits.value_counts(normalize=True).sort_index()
+
+            if len(benford_observed) >= 5:
+                chi2, p_value = stats.chisquare(
+                    benford_observed.values[:5],
+                    benford_expected[:5]
+                )
+                # Use 0.001 threshold (0.1%) - more reasonable for financial data
+                if p_value < 0.001:
+                    anomalies.append(f"Data may be fabricated (Benford's Law p={p_value:.4f})")
+                    severity = 'WARNING'  # Changed from CRITICAL to WARNING
 
         return {
             'anomalies_found': len(anomalies) > 0,
@@ -313,7 +329,8 @@ class AdvancedValidator:
             delta = df['close'].diff()
             gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-            rs = gain / loss
+            # Protect against division by zero
+            rs = gain / loss.replace(0, 1e-10)
             calculated_rsi = 100 - (100 / (1 + rs.iloc[-1]))
 
             if abs(calculated_rsi - indicators['rsi']) > 1.0:

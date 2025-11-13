@@ -60,8 +60,10 @@ class AdvancedAnalytics:
 
         for sim in range(num_simulations):
             for day in range(1, days_ahead):
-                # Geometric Brownian Motion
-                drift = mean_return
+                # Geometric Brownian Motion with Itô's Lemma correction
+                # The drift term must be adjusted by -0.5*σ² to avoid systematic bias
+                # This ensures E[S(t+1)] = S(t) * exp(μ) rather than being biased upward
+                drift = mean_return - 0.5 * std_return**2
                 shock = std_return * np.random.randn()
 
                 # Clamp exponent to prevent overflow
