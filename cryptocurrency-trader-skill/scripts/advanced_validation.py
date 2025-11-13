@@ -218,14 +218,21 @@ class AdvancedValidator:
             benford_observed = first_digits.value_counts(normalize=True).sort_index()
 
             if len(benford_observed) >= 5:
-                chi2, p_value = stats.chisquare(
-                    benford_observed.values[:5],
-                    benford_expected[:5]
-                )
-                # Use 0.001 threshold (0.1%) - more reasonable for financial data
-                if p_value < 0.001:
-                    anomalies.append(f"Data may be fabricated (Benford's Law p={p_value:.4f})")
-                    severity = 'WARNING'  # Changed from CRITICAL to WARNING
+                # Normalize both to same sum to avoid scipy tolerance errors
+                obs_vals = benford_observed.values[:5]
+                exp_vals = benford_expected[:5]
+
+                # Renormalize to same sum
+                obs_sum = obs_vals.sum()
+                exp_sum = exp_vals.sum()
+                if obs_sum > 0 and exp_sum > 0:
+                    obs_normalized = obs_vals * (exp_sum / obs_sum)
+
+                    chi2, p_value = stats.chisquare(obs_normalized, exp_vals)
+                    # Use 0.001 threshold (0.1%) - more reasonable for financial data
+                    if p_value < 0.001:
+                        anomalies.append(f"Data may be fabricated (Benford's Law p={p_value:.4f})")
+                        severity = 'WARNING'  # Changed from CRITICAL to WARNING
 
         return {
             'anomalies_found': len(anomalies) > 0,
