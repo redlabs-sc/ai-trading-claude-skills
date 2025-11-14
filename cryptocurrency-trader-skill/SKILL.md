@@ -3,591 +3,280 @@ name: cryptocurrency-trader
 description: Production-grade AI trading agent for cryptocurrency markets with advanced mathematical modeling, multi-layer validation, probabilistic analysis, and zero-hallucination tolerance. Implements Bayesian inference, Monte Carlo simulations, advanced risk metrics (VaR, CVaR, Sharpe), chart pattern recognition, and comprehensive cross-verification for real-world trading application.
 ---
 
-# Enhanced Cryptocurrency Trading Agent Skill
+# Cryptocurrency Trading Agent Skill
 
-## 🤖 Claude Code Quick Reference
+## Purpose
 
-**When user asks about cryptocurrency trading, analysis, or market opportunities:**
-
-```bash
-# Simple invocation
-cd cryptocurrency-trader-skill && python skill.py analyze BTC/USDT --balance 10000
-
-# Market scan
-cd cryptocurrency-trader-skill && python skill.py scan --top 5 --balance 10000
-
-# Interactive mode
-cd cryptocurrency-trader-skill && python skill.py interactive --balance 10000
-```
-
-**Default balance:** If user doesn't specify, use `--balance 10000`
-
-**Common trading pairs:** BTC/USDT, ETH/USDT, SOL/USDT, BNB/USDT, XRP/USDT
-
----
-
-## Overview
-
-This skill provides a **production-grade AI trading agent** for cryptocurrency markets designed for real-world application. Every output is validated through multiple stages to ensure accuracy, reliability, and actionability.
-
-**🚀 Advanced Capabilities:**
-
-### Multi-Layer Validation System (Zero Hallucination Tolerance)
-- **Stage 1:** Data integrity validation with statistical anomaly detection
-- **Stage 2:** Indicator validation with cross-verification
-- **Stage 3:** Signal validation with consistency checks
-- **Stage 4:** Final execution readiness validation
-- Benford's Law testing for fabricated data detection
-- Z-score outlier detection and IQR-based anomaly detection
-
-### Advanced Mathematical & Probabilistic Modeling
-- **Bayesian Inference:** Combines multiple indicators with historical accuracy rates
-- **Monte Carlo Simulations:** 10,000-scenario price modeling for risk assessment
-- **GARCH Volatility Forecasting:** Sophisticated volatility prediction
-- **Statistical Hypothesis Testing:** Validates signal effectiveness
-- **Correlation Analysis:** Multi-asset relationship modeling
-
-### Professional Risk Management
-- **Value at Risk (VaR):** Parametric, historical, and modified VaR calculations
-- **Conditional VaR (CVaR):** Expected shortfall analysis
-- **Sharpe Ratio:** Risk-adjusted return measurement
-- **Sortino Ratio:** Downside risk-focused performance metric
-- **Calmar Ratio:** Return vs maximum drawdown analysis
-- **Kelly Criterion:** Optimal position sizing calculation
-
-### Advanced Chart Pattern Recognition
-- **Reversal Patterns:** Double Top/Bottom, Head & Shoulders, Wedges
-- **Continuation Patterns:** Flags, Pennants, Triangles
-- **Candlestick Patterns:** Doji, Hammer, Engulfing, Shooting Star
-- **Support/Resistance:** Automated level detection with clustering
-- **Trend Analysis:** Multi-timeframe trend identification with strength scoring
-- **Market Regime Detection:** Trending vs ranging environment identification
-
-### Enhanced Technical Analysis
-- Standard indicators: RSI, MACD, Bollinger Bands, ATR
-- Advanced indicators: Stochastic Oscillator, EMA crossovers
-- Volume analysis: OBV, VPT, volume trend confirmation
-- Multi-timeframe consensus analysis (15m, 1h, 4h)
-- Real-time technical analysis across multiple timeframes (15m, 1h, 4h)
-- Market scanning of 30+ cryptocurrencies in 6 categories
+Provide production-grade cryptocurrency trading analysis with mathematical rigor, multi-layer validation, and comprehensive risk assessment. Designed for real-world trading application with zero-hallucination tolerance through 6-stage validation pipeline.
 
 ## When to Use This Skill
 
-Use this skill when the user wants to:
-- **Production-grade analysis** for real-world trading decisions
-- **Comprehensive risk assessment** with probabilistic modeling
-- **Multi-layer validated signals** with zero-hallucination guarantee
-- **Advanced pattern recognition** and chart analysis
-- **Professional risk metrics** (VaR, CVaR, Sharpe, Sortino)
-- **Monte Carlo simulations** for scenario analysis
-- **Bayesian probability** calculations for signal confidence
-- Analyze specific cryptocurrency trading pairs (e.g., BTC/USDT, ETH/USDT)
-- Find the best trading opportunities across the crypto market
-- Understand market conditions with comprehensive risk/reward analysis
+Use this skill when users request:
+- Analysis of specific cryptocurrency trading pairs (e.g., BTC/USDT, ETH/USDT)
+- Market scanning to find best trading opportunities
+- Comprehensive risk assessment with probabilistic modeling
+- Trading signals with advanced pattern recognition
+- Professional risk metrics (VaR, CVaR, Sharpe, Sortino)
+- Monte Carlo simulations for scenario analysis
+- Bayesian probability calculations for signal confidence
+
+## Core Capabilities
+
+### Validation & Accuracy
+- 6-stage validation pipeline with zero-hallucination tolerance
+- Statistical anomaly detection (Z-score, IQR, Benford's Law)
+- Cross-verification across multiple timeframes
+- 14 circuit breakers to prevent invalid signals
+
+### Analysis Methods
+- Bayesian inference for probability calculations
+- Monte Carlo simulations (10,000 scenarios)
+- GARCH volatility forecasting
+- Advanced chart pattern recognition
+- Multi-timeframe consensus (15m, 1h, 4h)
+
+### Risk Management
+- Value at Risk (VaR) and Conditional VaR (CVaR)
+- Risk-adjusted metrics (Sharpe, Sortino, Calmar)
+- Kelly Criterion position sizing
+- Automated stop-loss and take-profit calculation
+
+**Detailed capabilities:** See `references/advanced-capabilities.md`
 
 ## Prerequisites
 
-Before using this skill, ensure:
-1. Python 3.8+ environment is available
-2. Required packages installed (see requirements.txt)
-3. Internet connection for real-time market data from exchanges
-4. User's account balance is known for position sizing
-
-Install dependencies:
-```bash
-cd cryptocurrency-trader-skill
-pip install -r requirements.txt
-```
-
-**New Required Packages:**
-- `scipy>=1.11.0` - Advanced statistical functions
-- `scikit-learn>=1.3.0` - Machine learning utilities
-- `statsmodels>=0.14.0` - Statistical models
-- `ta>=0.11.0` - Technical analysis library
+Ensure the following before using this skill:
+1. Python 3.8+ environment available
+2. Internet connection for real-time market data
+3. Required packages installed: `pip install -r requirements.txt`
+4. User's account balance known for position sizing
 
 ## How to Use This Skill
 
-### 🚀 Quick Start (Recommended for Claude Code)
+### Quick Start Commands
 
-**Option 1: Analyze a specific cryptocurrency**
+**Analyze a specific cryptocurrency:**
 ```bash
-cd cryptocurrency-trader-skill
 python skill.py analyze BTC/USDT --balance 10000
 ```
 
-**Option 2: Scan market for best opportunities**
+**Scan market for best opportunities:**
 ```bash
-cd cryptocurrency-trader-skill
 python skill.py scan --top 5 --balance 10000
 ```
 
-**Option 3: Interactive exploration**
+**Interactive mode for exploration:**
 ```bash
-cd cryptocurrency-trader-skill
 python skill.py interactive --balance 10000
 ```
 
-### 📋 Step-by-Step Guide
+### Default Parameters
 
-**Step 1: Ask user for their trading balance**
-- If not specified, use default: `--balance 10000`
-- Example: "What is your trading account balance?"
+- **Balance:** If not specified by user, use `--balance 10000`
+- **Timeframes:** 15m, 1h, 4h (automatically analyzed)
+- **Risk per trade:** 2% of balance (enforced by default)
+- **Minimum risk/reward:** 1.5:1 (validated by circuit breakers)
 
-**Step 2: Determine what analysis they need**
-- Specific pair analysis: Use `analyze` command
-- Find opportunities: Use `scan` command
-- Explore interactively: Use `interactive` command
+### Common Trading Pairs
 
-**Step 3: Run the appropriate command**
-```bash
-# For specific pair
-python skill.py analyze <SYMBOL> --balance <AMOUNT>
+Major: BTC/USDT, ETH/USDT, BNB/USDT, SOL/USDT, XRP/USDT
+AI Tokens: RENDER/USDT, FET/USDT, AGIX/USDT
+Layer 1: ADA/USDT, AVAX/USDT, DOT/USDT
+Layer 2: MATIC/USDT, ARB/USDT, OP/USDT
+DeFi: UNI/USDT, AAVE/USDT, LINK/USDT
+Meme: DOGE/USDT, SHIB/USDT, PEPE/USDT
 
-# For market scan
-python skill.py scan --top <N> --balance <AMOUNT>
+### Workflow
 
-# For interactive mode
-python skill.py interactive --balance <AMOUNT>
-```
+1. **Gather Information**
+   - Ask user for trading pair (if analyzing specific symbol)
+   - Ask for account balance (or use default $10,000)
+   - Confirm user wants production-grade analysis
 
-### 🔧 Advanced Usage
+2. **Execute Analysis**
+   - Run appropriate command (analyze, scan, or interactive)
+   - Wait for comprehensive analysis to complete
+   - System automatically validates through 6 stages
 
-**Option A: Direct Script Invocation (Legacy)**
+3. **Present Results**
+   - Display trading signal (LONG/SHORT/NO_TRADE)
+   - Show confidence level and execution readiness
+   - Explain entry, stop-loss, and take-profit prices
+   - Present risk metrics and position sizing
+   - Highlight validation status (6/6 passed = execution ready)
 
-```bash
-cd cryptocurrency-trader-skill
-python scripts/trading_agent_enhanced.py
-```
+4. **Interpret Output**
+   - Reference `references/output-interpretation.md` for detailed guidance
+   - Translate technical metrics into user-friendly language
+   - Explain risk/reward in simple terms
+   - Always include risk warnings
 
-**Option B: Programmatic Usage**
+5. **Handle Edge Cases**
+   - If execution_ready = NO: Explain validation failures
+   - If confidence <40%: Recommend waiting for better opportunity
+   - If circuit breakers triggered: Explain specific issue
+   - If network errors: Suggest retry with exponential backoff
 
-See `example_usage.py` for 5 comprehensive examples
+### Output Structure
 
----
-
-## Interpreting Results
-
-### Understanding the Output
-
-The enhanced agent provides comprehensive analysis with:
-
-**Production-Grade Trading Signal:**
-- **Action:** LONG, SHORT, or NO_TRADE (with execution readiness flag)
-- **Confidence Level:** 0-95% (validated through multi-stage analysis)
-- **Confidence Breakdown:** Shows how confidence was calculated
-- **Entry Price:** Recommended entry point
-- **Stop Loss:** Mathematically calculated using ATR
-- **Take Profit:** Risk-adjusted target
-- **Risk/Reward Ratio:** Validated to ensure minimum 1.5:1
+**Trading Signal:**
+- Action: LONG/SHORT/NO_TRADE
+- Confidence: 0-95% (integer only, no false precision)
+- Entry Price: Recommended entry point
+- Stop Loss: Risk management exit (always required)
+- Take Profit: Profit target
+- Risk/Reward: Minimum 1.5:1 ratio
 
 **Probabilistic Analysis:**
-- **Bayesian Bullish/Bearish Probability:** Statistical likelihood based on multiple indicators
-- **Signal Strength:** WEAK, MODERATE, or STRONG
-- **Pattern Bias:** Confirmation from chart pattern analysis
-- **Monte Carlo Profit Probability:** % chance of profit based on 10,000 simulations
+- Bayesian probabilities (bullish/bearish)
+- Monte Carlo profit probability
+- Signal strength (WEAK/MODERATE/STRONG)
+- Pattern bias confirmation
 
-**Advanced Risk Assessment:**
-- **Value at Risk (VaR):** Maximum expected 1-day loss at 95% confidence
-- **Conditional VaR (CVaR):** Average loss in worst-case scenarios
-- **Sharpe Ratio:** Risk-adjusted return metric
-- **Sortino Ratio:** Downside risk-focused metric
-- **Max Drawdown:** Historical worst decline
-- **Win Rate:** % of profitable periods
-- **Profit Factor:** Gross profit / gross loss ratio
-
-**Monte Carlo Scenarios:**
-- **Expected Return:** Most likely outcome over next 5 periods
-- **Profit Probability:** Statistical chance of profit
-- **Best/Worst Case:** 5th and 95th percentile outcomes
+**Risk Assessment:**
+- VaR and CVaR (Value at Risk metrics)
+- Sharpe/Sortino/Calmar ratios
+- Max drawdown and win rate
+- Profit factor
 
 **Position Sizing:**
-- **Standard Sizing:** 2% risk rule (recommended)
-- **Kelly Conservative:** Mathematically optimal conservative sizing
-- **Kelly Aggressive:** Mathematically optimal aggressive sizing
-- **Trading Fees:** Estimated execution costs
-
-**Pattern Recognition:**
-- Detected chart patterns with confidence scores
-- Support and resistance levels
-- Trend analysis (short, medium, long-term)
-- Market regime (trending vs ranging)
-- Volume confirmation
+- Standard (2% risk rule) - recommended
+- Kelly Conservative - mathematically optimal
+- Kelly Aggressive - higher risk/reward
+- Trading fees estimate
 
 **Validation Status:**
-- Shows which validation stages passed (6 total)
-- Lists any critical failures or warnings
-- Execution readiness flag (YES/NO)
+- Stages passed (must be 6/6 for execution ready)
+- Circuit breakers triggered (if any)
+- Warnings and critical failures
 
-### Beginner-Friendly Explanations
+**Detailed interpretation:** See `references/output-interpretation.md`
 
-When presenting results to users, explain in simple terms:
+## Presenting Results to Users
 
-- **LONG** = "Buy now, sell higher later for profit"
-- **SHORT** = "Sell now, buy back cheaper later for profit"
-- **WAIT** = "No clear opportunity right now, patience is key"
-- **Stop Loss** = "Automatic exit to limit your loss if wrong"
-- **Take Profit** = "Automatic exit to lock in profits"
-- **Confidence %** = "How certain we are about this signal (higher = better)"
-- **Risk/Reward** = "For every $1 you risk, how much you could make"
-- **Execution Ready** = "Safe to trade? (YES/NO after validation checks)"
+### Language Guidelines
 
----
+Use beginner-friendly explanations:
+- "LONG" → "Buy now, sell higher later"
+- "SHORT" → "Sell now, buy back cheaper later"
+- "Stop Loss" → "Automatic exit to limit loss if wrong"
+- "Confidence %" → "How certain we are (higher = better)"
+- "Risk/Reward" → "For every $1 risked, potential $X profit"
 
-## Risk Warnings
+### Required Risk Warnings
 
-ALWAYS include these critical reminders:
-
-- Markets are unpredictable - even perfect analysis can be wrong
+ALWAYS include these reminders:
+- Markets are unpredictable - perfect analysis can still be wrong
 - Start with small amounts to learn
-- Never risk more than 2% of account per trade (enforced automatically)
-- Always use stop losses to protect your capital
+- Never risk more than 2% per trade (enforced automatically)
+- Always use stop losses
 - This is analysis, NOT financial advice
 - Past performance does NOT guarantee future results
-
-## Enhanced Multi-Layer Validation Framework
-
-The skill implements **production-grade validation** with zero-hallucination tolerance through 6 critical checkpoints:
-
-### Stage 1: Data Integrity Validation
-**Layer 1 - Structural Validation:**
-- Verifies all required columns present
-- Ensures minimum data points (20+)
-
-**Layer 2 - Price Logic Validation:**
-- No negative or zero prices
-- OHLC logic verification (High ≥ Low, Open, Close)
-- High ≥ Open and High ≥ Close (mathematical correctness)
-- Low ≤ Open and Low ≤ Close (mathematical correctness)
-- Volume must be non-negative
-- Detects unrealistic price jumps (>50% single candle)
-
-**Layer 3 - Statistical Anomaly Detection:**
-- **Z-score Analysis:** Detects extreme movements (>5 standard deviations)
-- **IQR Outlier Detection:** Identifies volume anomalies
-- **Monotonicity Check:** Detects fake/simulated data patterns
-- **Benford's Law Test:** Validates data authenticity (p<0.01 threshold)
-
-**Layer 4 - Data Freshness:**
-- Strict mode: Data must be <5 minutes old
-- Normal mode: Data must be <15 minutes old
-
-**Layer 5 - Completeness Check:**
-- Zero tolerance for missing values
-- Detects constant values (data freeze)
-
-### Stage 2: Indicator Validation
-- RSI must be 0-100 range
-- ATR must be positive
-- Bollinger Bands logic validation (Upper > Lower)
-- MACD sanity checks (<10% of price)
-- Cross-verification: Recalculates RSI independently to verify
-
-### Stage 3: Signal Validation
-- Action must be valid (LONG/SHORT/WAIT/NO_TRADE)
-- Confidence must be 0-100 range
-- Price level logic verification:
-  - LONG: Stop loss < Entry < Take profit
-  - SHORT: Stop loss > Entry > Take profit
-- Risk/reward ratio validation (minimum 1.5:1)
-- Risk scoring based on confidence, timeframes, metrics
-
-### Stage 4: Cross-Verification
-- Checks consensus across multiple analyses
-- Detects conflicting signals
-- Validates confidence consistency (<20% variance)
-- Price level consistency checks (<2% variance)
-
-### Stage 5: Execution Readiness
-- All previous stages must pass
-- Comprehensive validation report
-- Binary execution flag (YES/NO)
-
-### Stage 6: Production Validation
-- Final sanity checks before output
-- Validation history tracking
-- Success rate monitoring
-
-**Precision Control:**
-- Confidence levels: Integers only (no false precision)
-- Prices: Appropriate decimal places (no excessive precision)
-- Explicit "UNKNOWN" instead of guessing
-- Cap confidence at 95% (prevents overconfidence)
-
-**Circuit Breakers** (Enhanced):
-All original 8 blocks plus:
-9. Failed Benford's Law test (fabricated data)
-10. Extreme Z-scores (>5σ)
-11. High confidence variance across timeframes
-12. Pattern-signal conflict
-13. Negative Sharpe ratio
-14. Failed signal validation stage
-
-## Market Categories
-
-The agent analyzes 30+ cryptocurrencies across 6 categories:
-
-1. **Major Coins**: BTC, ETH, BNB, SOL, XRP
-2. **AI Tokens**: RENDER, FET, AGIX, OCEAN, TAO
-3. **Layer 1**: ADA, AVAX, DOT, ATOM
-4. **Layer 2**: MATIC, ARB, OP
-5. **DeFi**: UNI, AAVE, LINK, MKR
-6. **Meme**: DOGE, SHIB, PEPE
-
-## Technical Indicators Used
-
-- **RSI** (Relative Strength Index): Measures overbought/oversold conditions
-- **MACD** (Moving Average Convergence Divergence): Identifies trend direction
-- **ATR** (Average True Range): Measures volatility for stop loss placement
-- **Bollinger Bands**: Identifies price extremes and volatility
-- **Multi-timeframe Consensus**: Confirms signals across 15m, 1h, 4h timeframes
-
-## Output Format
-
-Present results clearly with:
-
-```
-🔍 Analyzing [SYMBOL]...
-💰 CURRENT PRICE: $[price]
-📈 RECOMMENDATION: [LONG/SHORT/WAIT] at $[price]
-
-🎯 ACTION: [LONG/SHORT/WAIT]
-📊 CONFIDENCE: [X]% (NOT a guarantee)
-💵 ENTRY PRICE: $[price]
-🛑 STOP LOSS: $[price]
-🎁 TAKE PROFIT: $[price]
-⚖️ RISK/REWARD: 1:[ratio]
-
-💼 POSITION SIZING (based on $[balance] balance):
-- Risk Amount: $[amount] (2% of balance)
-- Position Size: $[amount] ([quantity] coins)
-
-⛔ CIRCUIT BREAKERS: [any blocks]
-⚠️ WARNINGS: [any warnings]
-```
-
-## Common User Questions
-
-**Q: What confidence level should I look for?**
-A: 60%+ is moderate, 70%+ is strong. Avoid anything >90% (unrealistic). Never trade below 40%.
-
-**Q: What's a good risk/reward ratio?**
-A: Minimum 1.5:1 (make $1.50 for every $1 risked). Prefer 2:1 or better.
-
-**Q: How much should I trade?**
-A: The agent enforces 2% max risk per trade and 10% max position size automatically.
-
-**Q: What if it shows WAIT?**
-A: That's normal! Most of the time, the best action is to wait for clear opportunities.
-
-**Q: Can I trust the analysis?**
-A: Use it as one input among many. Do your own research, start small, and never risk money you can't afford to lose.
-
-## Advanced Modules Architecture
-
-The enhanced skill is built on a modular architecture for maintainability and extensibility:
-
-### Core Modules
-
-**1. `advanced_validation.py` (500+ lines)**
-- AdvancedValidator class with multi-layer validation
-- Statistical anomaly detection (Z-score, IQR, Benford's Law)
-- Data integrity validation with 5 layers
-- Indicator validation with cross-verification
-- Signal validation with risk scoring
-- Cross-verification across multiple analyses
-- Validation history tracking
-
-**2. `advanced_analytics.py` (600+ lines)**
-- AdvancedAnalytics class for probabilistic modeling
-- Monte Carlo simulation (10,000 scenarios)
-- Bayesian signal probability calculation
-- VaR and CVaR computation (parametric, historical, modified)
-- Advanced risk metrics (Sharpe, Sortino, Calmar)
-- GARCH volatility forecasting
-- Kelly Criterion position sizing
-- Correlation analysis
-- Hypothesis testing for signal validation
-
-**3. `pattern_recognition.py` (700+ lines)**
-- PatternRecognition class for chart analysis
-- Reversal patterns: Double Top/Bottom, Head & Shoulders, Wedges
-- Continuation patterns: Flags, Pennants, Triangles
-- Candlestick patterns: Doji, Hammer, Engulfing, Shooting Star
-- Support/resistance detection with clustering
-- Multi-timeframe trend analysis
-- Market regime detection (trending vs ranging)
-- Volume analysis (OBV, VPT)
-- Pattern confidence scoring and validation
-
-**4. `trading_agent_enhanced.py` (800+ lines)**
-- EnhancedTradingAgent class - production-grade engine
-- Multi-timeframe data collection with validation
-- Advanced indicator calculation
-- Comprehensive analysis pipeline (6 stages)
-- Bayesian signal generation
-- Monte Carlo risk assessment
-- Position sizing with Kelly Criterion
-- Analysis history tracking
-- Comprehensive display formatting
-
-**5. `trading_agent.py` (518 lines) - Legacy**
-- Original TradingAgent for backward compatibility
-- Basic technical analysis
-- Standard position sizing
-- Simple validation
-
-## Resources
-
-For detailed technical information, refer to:
-- `scripts/trading_agent_enhanced.py` - Enhanced production-grade agent (800+ lines)
-- `scripts/advanced_validation.py` - Multi-layer validation system (500+ lines)
-- `scripts/advanced_analytics.py` - Probabilistic modeling engine (600+ lines)
-- `scripts/pattern_recognition.py` - Chart pattern recognition (700+ lines)
-- `scripts/trading_agent.py` - Legacy agent for backward compatibility (518 lines)
-- `tests/test_trading_agent.py` - Comprehensive test suite
-- `requirements.txt` - All dependencies including scipy, scikit-learn, statsmodels
-
-## Testing
-
-Run tests to verify functionality:
-
-```bash
-python tests/test_trading_agent.py
-```
-
-Expected: 2-3/3 tests passed (network test may fail in restricted environments)
-
-**Testing Enhanced Features:**
-
-```python
-# Test validation module
-from scripts.advanced_validation import AdvancedValidator
-validator = AdvancedValidator(strict_mode=True)
-
-# Test analytics module
-from scripts.advanced_analytics import AdvancedAnalytics
-analytics = AdvancedAnalytics(confidence_level=0.95)
-
-# Test pattern recognition
-from scripts.pattern_recognition import PatternRecognition
-patterns = PatternRecognition(min_pattern_length=10)
-```
-
-## Production-Ready Status & Safety
-
-### ⚠️ CRITICAL UNDERSTANDING
-
-This enhanced skill is designed for **real-world trading application** with the following characteristics:
-
-**✅ Production-Ready Features:**
-- All outputs pass through 6-stage validation
-- Multi-layer cross-verification eliminates hallucinations
-- Mathematical rigor in all calculations
-- Statistical validation of all signals
-- Comprehensive risk assessment
-- Execution readiness flags
-
-**❗ User Responsibilities:**
-- **YOU are solely responsible** for all trading decisions
-- **Markets are inherently unpredictable** - even perfect analysis can be wrong
-- **Past performance does NOT guarantee future results**
-- **Start with small positions** to validate the system
-- **Always use stop losses** to protect capital
-- **Never risk more than you can afford to lose**
-- **This is analysis, NOT financial advice**
-
-### Risk Management Principles
-
-The skill enforces these principles, but YOU must apply them:
-
-1. **Maximum Risk:** 2% of account per trade (enforced by default)
-2. **Position Size Limit:** 10% of account maximum
-3. **Minimum Risk/Reward:** 1.5:1 (validated by circuit breakers)
-4. **Stop Loss:** Always required for trade execution
-5. **Validation:** All signals must pass 6-stage validation
+- User is solely responsible for all trading decisions
 
 ### When NOT to Trade
 
-Even with production-grade analysis, do NOT trade when:
-- Validation stages fail (<6/6 passed)
-- Execution Ready flag is "NO"
-- Market regime is highly volatile with low confidence
-- You don't understand the analysis
-- You can't afford the loss
-- Emotional stress is high
+Advise users to avoid trading when:
+- Validation status <6/6 passed
+- Execution Ready flag = NO
+- Confidence <60% for moderate signals, <70% for strong
+- User doesn't understand the analysis
+- User can't afford potential loss
+- High emotional stress or fatigue
 
-### Continuous Improvement
+## Advanced Usage
 
-The skill tracks validation history and can report:
-- Overall validation success rate
-- Pattern accuracy over time
-- Signal effectiveness metrics
+### Programmatic Integration
 
-Use these metrics to continuously refine your trading approach.
+For custom workflows, import directly:
+```python
+from scripts.trading_agent_refactored import TradingAgent
+
+agent = TradingAgent(balance=10000)
+analysis = agent.comprehensive_analysis('BTC/USDT')
+print(analysis['final_recommendation'])
+```
+
+See `example_usage.py` for 5 comprehensive examples.
+
+### Configuration
+
+Customize behavior via `config.yaml`:
+- Validation strictness (strict vs normal mode)
+- Risk parameters (max risk, position limits)
+- Circuit breaker thresholds
+- Timeframe preferences
+
+### Testing
+
+Verify installation and functionality:
+```bash
+# Run compatibility test
+./test_claude_code_compat.sh
+
+# Run comprehensive tests
+python -m pytest tests/
+```
+
+## Reference Documentation
+
+- `references/advanced-capabilities.md` - Detailed technical capabilities
+- `references/output-interpretation.md` - Comprehensive output guide
+- `references/optimization.md` - Trading optimization strategies
+- `references/protocol.md` - Usage protocols and best practices
+- `references/psychology.md` - Trading psychology principles
+- `references/user-guide.md` - End-user documentation
+- `references/technical-docs/` - Implementation details and bug reports
+
+## Architecture
+
+**Core Modules:**
+- `scripts/trading_agent_refactored.py` - Main trading agent (production)
+- `scripts/advanced_validation.py` - Multi-layer validation system
+- `scripts/advanced_analytics.py` - Probabilistic modeling engine
+- `scripts/pattern_recognition_refactored.py` - Chart pattern recognition
+- `scripts/indicators/` - Technical indicator calculations
+- `scripts/market/` - Data provider and market scanner
+- `scripts/risk/` - Position sizing and risk management
+- `scripts/signals/` - Signal generation and recommendation
+
+**Entry Points:**
+- `skill.py` - Command-line interface (recommended)
+- `__main__.py` - Python module invocation
+- `example_usage.py` - Programmatic usage examples
 
 ## Version
 
 **v2.0.1 - Production Hardened Edition**
 
-### What's New in v2.0.1 (2025-01-11):
-- ✅ **CRITICAL: Fixed variable name error** causing position sizing crashes
-- ✅ **CRITICAL: Fixed import paths** - works from any directory now
-- ✅ **HIGH: Division by zero protection** in ADX calculation
-- ✅ **HIGH: NaN handling** in volume analysis (OBV, VPT)
-- ✅ **HIGH: Overflow protection** in Monte Carlo simulations
-- ✅ **HIGH: Network retry logic** with exponential backoff (3 attempts)
-- ✅ **MEDIUM: UTC timezone** consistency for data freshness
-- ✅ **MEDIUM: Benford's Law** threshold adjusted (reduced false positives)
-- ✅ **NEW: Logging infrastructure** - file + console logging
-- ✅ **NEW: Input validation** - type checking and range validation
-- ✅ **NEW: scan_market() method** - documented feature now implemented
+Recent improvements:
+- Fixed critical bugs (division by zero, import paths, NaN handling)
+- Enhanced network retry logic with exponential backoff
+- Improved logging infrastructure
+- Comprehensive input validation
+- UTC timezone consistency
+- Benford's Law threshold optimization
 
-**Status:** 🟢 PRODUCTION READY - All crashes and silent failures eliminated
+**Status:** 🟢 PRODUCTION READY
 
-See `FIXES_APPLIED.md` for complete details and `BUG_ANALYSIS_REPORT.md` for original bug discovery.
+See `references/technical-docs/FIXES_APPLIED.md` for complete changelog.
 
----
+## Troubleshooting
 
-**v2.0.0 - Enhanced Production Edition**
-
-Major enhancements:
-- ✅ Multi-layer validation framework (6 stages)
-- ✅ Bayesian probabilistic modeling
-- ✅ Monte Carlo simulations (10,000 scenarios)
-- ✅ Advanced risk metrics (VaR, CVaR, Sharpe, Sortino, Calmar)
-- ✅ Chart pattern recognition (reversal + continuation patterns)
-- ✅ Statistical anomaly detection (Z-score, IQR, Benford's Law)
-- ✅ GARCH volatility forecasting
-- ✅ Kelly Criterion position sizing
-- ✅ Comprehensive cross-verification
-- ✅ Production-ready execution flags
-- ✅ Detailed confidence breakdowns
-- ✅ Market regime detection
-
-**Breaking changes from v1.0.0:**
-- New modules: `advanced_validation.py`, `advanced_analytics.py`, `pattern_recognition.py`
-- New dependencies: scipy, scikit-learn, statsmodels, ta
-- Enhanced output format with comprehensive reports
-- Stricter validation (some signals from v1.0 may now be blocked)
-- Legacy support maintained through original `trading_agent.py`
-
-## Support & Contribution
-
-For issues, questions, or contributions:
-- Review module documentation in respective Python files
-- Check validation reports for specific failure reasons
-- Test individual modules in isolation
-- Contribute improvements via pull requests
-
-**Module-specific debugging:**
-```python
-# Get validation history
-validator = AdvancedValidator()
-summary = validator.get_validation_summary()
-print(summary)
-
-# View detailed analysis
-analysis = agent.comprehensive_analysis('BTC/USDT')
-print(f"Stages passed: {analysis['validation_stages_passed']}")
-print(f"Execution ready: {analysis['execution_ready']}")
+**Installation issues:**
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
+
+**Import errors:**
+Ensure running from skill directory or using `skill.py` entry point.
+
+**Network failures:**
+System automatically retries with exponential backoff (3 attempts).
+
+**Validation failures:**
+Check validation report in output - explains which stage failed and why.
+
+**For detailed debugging:**
+Enable logging in `config.yaml` or check `references/technical-docs/BUG_ANALYSIS_REPORT.md`
