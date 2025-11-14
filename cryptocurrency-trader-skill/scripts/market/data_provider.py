@@ -101,7 +101,7 @@ class MarketDataProvider:
 
             # Validate data if validator is available
             if self.validator:
-                validation_report = self.validator.validate_data_integrity(df, symbol)
+                validation_report = self.validator.validate_data_integrity(df, symbol, timeframe)
 
                 if not validation_report['passed']:
                     logger.error(f"Validation failed for {symbol} [{timeframe}]")

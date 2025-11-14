@@ -29,10 +29,49 @@ class AdvancedValidator:
         self.strict_mode = strict_mode
         self.validation_history = []
 
-    def validate_data_integrity(self, df: pd.DataFrame, symbol: str) -> Dict:
+    def _parse_timeframe(self, timeframe: str) -> int:
+        """
+        Parse timeframe string to minutes
+
+        Args:
+            timeframe: Timeframe string (e.g., "15m", "1h", "4h", "1d")
+
+        Returns:
+            Number of minutes in the timeframe
+        """
+        if not timeframe:
+            return None
+
+        timeframe = timeframe.lower().strip()
+
+        # Extract number and unit
+        if timeframe.endswith('m'):
+            return int(timeframe[:-1])
+        elif timeframe.endswith('h'):
+            return int(timeframe[:-1]) * 60
+        elif timeframe.endswith('d'):
+            return int(timeframe[:-1]) * 1440
+        elif timeframe.endswith('w'):
+            return int(timeframe[:-1]) * 10080
+        else:
+            # Try to parse as minutes
+            try:
+                return int(timeframe)
+            except ValueError:
+                return None
+
+    def validate_data_integrity(self, df: pd.DataFrame, symbol: str, timeframe: str = None) -> Dict:
         """
         Stage 1: Deep data integrity validation
         Returns detailed validation report with multi-layer checks
+
+        Args:
+            df: OHLCV DataFrame to validate
+            symbol: Trading symbol (e.g., "BTC/USDT")
+            timeframe: Timeframe string (e.g., "15m", "1h", "4h") for context-aware validation
+
+        Returns:
+            Validation report dict with passed status, failures, and warnings
         """
         report = {
             'stage': 'DATA_INTEGRITY',
@@ -65,8 +104,9 @@ class AdvancedValidator:
             else:
                 report['warnings'].extend(anomaly_check['details'])
 
-        # Layer 4: Data freshness validation
-        freshness_check = self._validate_freshness(df)
+        # Layer 4: Data freshness validation (timeframe-aware)
+        timeframe_minutes = self._parse_timeframe(timeframe) if timeframe else None
+        freshness_check = self._validate_freshness(df, timeframe_minutes)
         if not freshness_check['passed']:
             report['critical_failures'].append(freshness_check['message'])
             report['passed'] = False
@@ -240,8 +280,17 @@ class AdvancedValidator:
             'details': anomalies
         }
 
-    def _validate_freshness(self, df: pd.DataFrame) -> Dict:
-        """Validate data freshness with consistent timezone handling"""
+    def _validate_freshness(self, df: pd.DataFrame, timeframe_minutes: int = None) -> Dict:
+        """
+        Validate data freshness with timeframe-aware thresholds
+
+        Args:
+            df: OHLCV DataFrame
+            timeframe_minutes: Timeframe interval in minutes (e.g., 15 for "15m", 60 for "1h")
+
+        Returns:
+            Dict with passed status, age_seconds, and message
+        """
         from datetime import timezone
 
         latest_time = df['timestamp'].iloc[-1]
@@ -256,9 +305,18 @@ class AdvancedValidator:
         current_time_utc = datetime.now(timezone.utc)
         age_seconds = (current_time_utc - latest_time_utc).total_seconds()
 
-        # In strict mode, data must be <5 minutes old
-        # In normal mode, data must be <15 minutes old
-        max_age = 300 if self.strict_mode else 900
+        # Timeframe-aware max age calculation
+        if timeframe_minutes:
+            # Allow 1.5x timeframe in strict mode, 2.0x in normal mode
+            # This accounts for the fact that the latest closed candle can be up to
+            # 1 full timeframe old in normal market conditions
+            multiplier = 1.5 if self.strict_mode else 2.0
+            max_age = int(timeframe_minutes * 60 * multiplier)  # Convert minutes to seconds
+        else:
+            # Fallback to fixed thresholds if no timeframe provided (backward compatibility)
+            # In strict mode, data must be <5 minutes old
+            # In normal mode, data must be <15 minutes old
+            max_age = 300 if self.strict_mode else 900
 
         return {
             'passed': age_seconds < max_age,
