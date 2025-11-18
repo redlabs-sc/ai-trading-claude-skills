@@ -127,7 +127,7 @@ class EnhancedTradingAgent:
             df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
 
             # Stage 1: Data Integrity Validation (CRITICAL CHECKPOINT)
-            validation_report = self.validator.validate_data_integrity(df, symbol)
+            validation_report = self.validator.validate_data_integrity(df, symbol, timeframe)
 
             if not validation_report['passed']:
                 print(f"\n❌ VALIDATION FAILURE for {symbol} [{timeframe}]")
