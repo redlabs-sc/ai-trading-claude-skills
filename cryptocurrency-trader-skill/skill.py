@@ -25,18 +25,23 @@ sys.path.insert(0, SCRIPT_DIR)
 def get_agent_class():
     """Import and return the appropriate TradingAgent class"""
     try:
-        # Try refactored version first
-        from trading_agent_refactored import TradingAgent
-        return TradingAgent, 'refactored'
+        # Try V2 (enhanced 12-stage) first
+        from trading_agent_v2 import TradingAgentV2
+        return TradingAgentV2, 'v2 (enhanced 12-stage)'
     except ImportError:
         try:
-            # Fall back to enhanced version
-            from trading_agent_enhanced import EnhancedTradingAgent as TradingAgent
-            return TradingAgent, 'enhanced'
+            # Fall back to refactored version
+            from trading_agent_refactored import TradingAgent
+            return TradingAgent, 'refactored'
         except ImportError:
-            # Fall back to original
-            from trading_agent import TradingAgent
-            return TradingAgent, 'original'
+            try:
+                # Fall back to enhanced version
+                from trading_agent_enhanced import EnhancedTradingAgent as TradingAgent
+                return TradingAgent, 'enhanced'
+            except ImportError:
+                # Fall back to original
+                from trading_agent import TradingAgent
+                return TradingAgent, 'original'
 
 
 def analyze_symbol(symbol: str, balance: float, timeframes: Optional[list] = None) -> Dict:
